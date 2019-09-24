@@ -1,0 +1,120 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+    def versionPropsFile = file('version.properties')
+
+
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def value = 0
+        def runTasks = gradle.startParameter.taskNames
+        def version_Code = versionProps['VERSION_CODE'].toInteger()
+        def versionBuild = versionProps['VERSION_BUILD'].toInteger()
+        def versionAlpha = versionProps['VERSION_ALPHA'].toInteger()
+        def versionBeta = versionProps['VERSION_BETA'].toInteger()
+        def versionMinor = versionProps['VERSION_MINOR'].toInteger()
+        def versionRelease = versionProps['VERSION_RELEASE'].toInteger()
+        def versionPath = ""
+        def versionMinorS = ""
+        for (String item : runTasks) {
+            if (item.contains("assembleRelease")) {
+                version_Code = version_Code + 1
+                versionRelease = versionRelease + 1
+                versionProps['VERSION_RELEASE'] = versionRelease.toString()
+            }
+            if (item.contains("assembleMinor")) {
+                version_Code = version_Code + 1
+                versionMinor = versionMinor + 1
+                if (versionMinor < 10) {
+                    versionProps['VERSION_MINOR'] = "0" + versionMinor.toString()
+                } else {
+                    versionProps['VERSION_MINOR'] = versionMinor.toString()
+                }
+            }
+            if (item.contains("assembleBeta")) {
+                versionBeta = versionBeta + 1
+                version_Code = version_Code + 1
+                versionProps['VERSION_BETA'] = versionBeta.toString()
+                versionPath = ".B" + versionBeta
+            }
+            if (item.contains("assembleAlpha")) {
+                versionAlpha = versionAlpha + 1
+                version_Code = version_Code + 1
+                versionProps['VERSION_ALPHA'] = versionAlpha.toString()
+                versionPath = ".A" + versionAlpha
+            }
+            if (item.contains("assembleDebug")) {
+                versionBuild = versionBuild + 1
+            }
+        }
+        versionMinorS = versionProps['VERSION_MINOR']
+        versionProps['VERSION_BUILD'] = versionBuild.toString()
+        versionProps['VERSION_CODE'] = version_Code.toString()
+
+
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        defaultConfig {
+            applicationId "com.krlsedu.cths.mediacontrol"
+            minSdkVersion 17
+            targetSdkVersion 26
+            versionCode version_Code
+
+            versionName "${versionRelease}.${versionMinorS}${versionPath}-Build(${versionBuild})"
+        }
+        print println("MediaControl-" + defaultConfig.versionName)
+    } else {
+        //throw new GradleException("Could not read version.properties!")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "MediaControl-" + defaultConfig.versionName+".apk"
+                }
+            }
+        }
+        alpha {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "MediaControl-" + defaultConfig.versionName+".apk"
+                }
+            }
+        }
+        beta {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "MediaControl-" + defaultConfig.versionName+".apk"
+                }
+            }
+        }
+        minor {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "MediaControl-" + defaultConfig.versionName+".apk"
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:support-v13:26.1.0'
+}

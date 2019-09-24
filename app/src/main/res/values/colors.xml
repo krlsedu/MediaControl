@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryCircleClose">#F44336</color>
+    <color name="colorPrimaryCircleCloseDark">#D32F2F</color>
+    <color name="colorPrimaryCircleConfig">#4CAF50</color>
+    <color name="colorPrimaryCircleConfigDark">#388E3C</color>
+    <color name="colorPrimaryButons">#F5F5F5</color>
+    <color name="colorPrimaryButonsBorder">#757575</color>
+    <color name="colorAccent">#FF4081</color>
+</resources>
